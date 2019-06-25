@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="IRIS" version="26" zv="IRIS for Windows (x86-64) 2018.2 (Build 471U)" ts="2019-06-14 15:22:20">
+<Class name="FirstLook.ObjectScript">
+<Description>
+ObjectScript First Look</Description>
+<TimeChanged>65178,54157.597904</TimeChanged>
+<TimeCreated>65127,45967.546529</TimeCreated>
+
+<Method name="Main">
+<Description><![CDATA[
+Some basic ObjectScript commands<br>
+You can type these commands in Terminal or call with:<br>
+do ##class(FirstLook.ObjectScript).Main()]]></Description>
+<ClassMethod>1</ClassMethod>
+<Implementation><![CDATA[
+	// set a variable
+	set x = "Welcome to ObjectScript!"
+	// write the contents of the variable
+	write x
+	// create a global
+	set ^Settings("Color") = "Red"
+	// make it multidimensional
+	set ^Settings("Auto1", "Properties", "Color") = "Red"
+	set ^Settings("Auto1", "Properties", "Model") = "SUV"
+	set ^Settings("Auto2", "Owner") = "Mo"
+	set ^Settings("Auto2", "Properties", "Color") = "Green"
+	// display the contents of the global
+	write !
+	zwrite ^Settings
+	// store some values in a another global
+	set ^testglobal(1) = 8888
+	set ^testglobal(2) = 9999
+	// get a stored value and set a local variable
+	set globalValue = $get(^testglobal(1))
+	// write the variable
+	write !, "The value of ^testglobal(1) is ", globalValue
+]]></Implementation>
+</Method>
+
+<Method name="Iterate">
+<Description><![CDATA[
+Iterate over global ^testglobal<br>
+To call from Terminal:<br>
+do ##class(FirstLook.ObjectScript).Iterate()]]></Description>
+<ClassMethod>1</ClassMethod>
+<Implementation><![CDATA[
+	// Start by setting subscript to ""
+	set subscript = ""
+	// "Argumentless" for loop
+	for {
+		// Get the next subscript
+		set subscript = $order(^testglobal(subscript))
+		// When we get to the end, quit the for loop
+		if (subscript = "") quit
+		// Otherwise, write the subscript and the value stored at ^testglobal(subscript)
+		write !, "subscript=", subscript, ", value=", ^testglobal(subscript)
+	}
+]]></Implementation>
+</Method>
+</Class>
+
+
+<Class name="FirstLook.Person">
+<Description><![CDATA[
+Person class for ObjectScript FirstLook<br>]]></Description>
+<Super>%Persistent</Super>
+<TimeChanged>65178,46003.286581</TimeChanged>
+<TimeCreated>65127,42843.235733</TimeCreated>
+
+<Property name="FirstName">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Property name="LastName">
+<Type>%String</Type>
+<Required>1</Required>
+</Property>
+
+<Method name="Main">
+<Description><![CDATA[
+Create and store an instance of a person and print name
+You can type these commands in Terminal or call with:<br>
+do ##class(FirstLook.Person).Main()]]></Description>
+<ClassMethod>1</ClassMethod>
+<Implementation><![CDATA[
+	set person = ##class(FirstLook.Person).%New()
+	set person.FirstName = "Sarah"
+	set person.LastName = "Aarons"
+	set status = person.%Save()
+	if (status = 1) do person.PrintName()
+]]></Implementation>
+</Method>
+
+<Method name="PrintName">
+<Description><![CDATA[
+Given an instance of a person, print person's name<br>
+To call from Terminal:<br>
+do person.PrintName()]]></Description>
+<Implementation><![CDATA[
+	write "The name of this person is:"
+	write !, ..FirstName
+	write !, ..LastName
+]]></Implementation>
+</Method>
+
+<Query name="Select">
+<Description><![CDATA[
+Query for all stored names<br>
+Called from ClassMethod PrintAllNames()<br>
+To call from Terminal:<br>
+do ##class(%ResultSet).RunQuery("FirstLook.Person", "Select")]]></Description>
+<Type>%SQLQuery</Type>
+<SqlProc>1</SqlProc>
+<SqlQuery>	SELECT %ID, FirstName, LastName 
+	FROM Person
+	ORDER By LastName, FirstName</SqlQuery>
+</Query>
+
+<Method name="PrintAllNames">
+<Description><![CDATA[
+Run select query and print all names in result set<br>
+To call from Terminal:<br>
+do ##class(FirstLook.Person).PrintAllNames()]]></Description>
+<ClassMethod>1</ClassMethod>
+<Implementation><![CDATA[
+	set resultSet = ##class(%ResultSet).%New()
+	set resultSet.ClassName = "FirstLook.Person"
+	set resultSet.QueryName = "Select"
+	set status = resultSet.%Execute()
+	if (status = 1) {
+		while (resultSet.%Next() '= 0) {
+			write !, resultSet.FirstName, " ", resultSet.LastName
+		}
+	}
+]]></Implementation>
+</Method>
+
+<Storage name="Default">
+<Type>%Storage.Persistent</Type>
+<DataLocation>^FirstLook.PersonD</DataLocation>
+<DefaultData>PersonDefaultData</DefaultData>
+<IdLocation>^FirstLook.PersonD</IdLocation>
+<IndexLocation>^FirstLook.PersonI</IndexLocation>
+<StreamLocation>^FirstLook.PersonS</StreamLocation>
+<Data name="PersonDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>FirstName</Value>
+</Value>
+<Value name="3">
+<Value>LastName</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>
