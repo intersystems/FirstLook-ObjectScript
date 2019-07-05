@@ -84,10 +84,14 @@ You can type these commands in Terminal or call with:<br>
 do ##class(FirstLook.Person).Main()]]></Description>
 <ClassMethod>1</ClassMethod>
 <Implementation><![CDATA[
+	// Instantiate a new person object
 	set person = ##class(FirstLook.Person).%New()
+	// Set the FirstName and Last Name properties
 	set person.FirstName = "Sarah"
 	set person.LastName = "Aarons"
+	// Save the new person
 	set status = person.%Save()
+	// If status = 1, save is successful
 	if (status = 1) do person.PrintName()
 ]]></Implementation>
 </Method>
@@ -124,36 +128,23 @@ To call from Terminal:<br>
 do ##class(FirstLook.Person).PrintAllNames()]]></Description>
 <ClassMethod>1</ClassMethod>
 <Implementation><![CDATA[
+	// Create a new ResultSet object
 	set resultSet = ##class(%ResultSet).%New()
+	// Set the ClassName and QueryName properties
 	set resultSet.ClassName = "FirstLook.Person"
 	set resultSet.QueryName = "Select"
+	// Execute the query
 	set status = resultSet.%Execute()
+	// If status = 1, query is successful
 	if (status = 1) {
+		// Iterate over results
 		while (resultSet.%Next() '= 0) {
+			// Write person's first and last name
 			write !, resultSet.FirstName, " ", resultSet.LastName
 		}
 	}
 ]]></Implementation>
 </Method>
 
-<Storage name="Default">
-<Type>%Storage.Persistent</Type>
-<DataLocation>^FirstLook.PersonD</DataLocation>
-<DefaultData>PersonDefaultData</DefaultData>
-<IdLocation>^FirstLook.PersonD</IdLocation>
-<IndexLocation>^FirstLook.PersonI</IndexLocation>
-<StreamLocation>^FirstLook.PersonS</StreamLocation>
-<Data name="PersonDefaultData">
-<Value name="1">
-<Value>%%CLASSNAME</Value>
-</Value>
-<Value name="2">
-<Value>FirstName</Value>
-</Value>
-<Value name="3">
-<Value>LastName</Value>
-</Value>
-</Data>
-</Storage>
 </Class>
 </Export>
