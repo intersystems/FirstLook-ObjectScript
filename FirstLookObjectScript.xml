@@ -13,26 +13,26 @@ You can type these commands in Terminal or call with:<br>
 do ##class(FirstLook.ObjectScript).Main()]]></Description>
 <ClassMethod>1</ClassMethod>
 <Implementation><![CDATA[
-	// set a variable
+	// Set a variable
 	set x = "Welcome to ObjectScript!"
-	// write the contents of the variable
+	// Write the contents of the variable
 	write x
-	// create a global
+	// Create a global
 	set ^Settings("Color") = "Red"
-	// make it multidimensional
+	// Make it multidimensional
 	set ^Settings("Auto1", "Properties", "Color") = "Red"
 	set ^Settings("Auto1", "Properties", "Model") = "SUV"
 	set ^Settings("Auto2", "Owner") = "Mo"
 	set ^Settings("Auto2", "Properties", "Color") = "Green"
-	// display the contents of the global
+	// Display the contents of the global
 	write !
 	zwrite ^Settings
-	// store some values in a another global
+	// Store some values in a another global
 	set ^testglobal(1) = 8888
 	set ^testglobal(2) = 9999
-	// get a stored value and set a local variable
+	// Get a stored value and set a local variable
 	set globalValue = $get(^testglobal(1))
-	// write the variable
+	// Write the variable
 	write !, "The value of ^testglobal(1) is ", globalValue
 ]]></Implementation>
 </Method>
@@ -86,7 +86,7 @@ do ##class(FirstLook.Person).Main()]]></Description>
 <Implementation><![CDATA[
 	// Instantiate a new person object
 	set person = ##class(FirstLook.Person).%New()
-	// Set the FirstName and Last Name properties
+	// Set the FirstName and LastName properties
 	set person.FirstName = "Sarah"
 	set person.LastName = "Aarons"
 	// Save the new person
