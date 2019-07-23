@@ -6,37 +6,6 @@ ObjectScript First Look</Description>
 <TimeChanged>65178,54157.597904</TimeChanged>
 <TimeCreated>65127,45967.546529</TimeCreated>
 
-<Method name="Main">
-<Description><![CDATA[
-Some basic ObjectScript commands<br>
-You can type these commands in Terminal or call with:<br>
-do ##class(FirstLook.ObjectScript).Main()]]></Description>
-<ClassMethod>1</ClassMethod>
-<Implementation><![CDATA[
-	// Set a variable
-	set x = "Welcome to ObjectScript!"
-	// Write the contents of the variable
-	write x
-	// Create a global
-	set ^Settings("Color") = "Red"
-	// Make it multidimensional
-	set ^Settings("Auto1", "Properties", "Color") = "Red"
-	set ^Settings("Auto1", "Properties", "Model") = "SUV"
-	set ^Settings("Auto2", "Owner") = "Mo"
-	set ^Settings("Auto2", "Properties", "Color") = "Green"
-	// Display the contents of the global
-	write !
-	zwrite ^Settings
-	// Store some values in a another global
-	set ^testglobal(1) = 8888
-	set ^testglobal(2) = 9999
-	// Get a stored value and set a local variable
-	set globalValue = $get(^testglobal(1))
-	// Write the variable
-	write !, "The value of ^testglobal(1) is ", globalValue
-]]></Implementation>
-</Method>
-
 <Method name="Iterate">
 <Description><![CDATA[
 Iterate over global ^testglobal<br>
@@ -52,7 +21,8 @@ do ##class(FirstLook.ObjectScript).Iterate()]]></Description>
 		set subscript = $order(^testglobal(subscript))
 		// When we get to the end, quit the for loop
 		if (subscript = "") quit
-		// Otherwise, write the subscript and the value stored at ^testglobal(subscript)
+		// Otherwise, write the subscript and the value
+		// stored at ^testglobal(subscript)
 		write !, "subscript=", subscript, ", value=", ^testglobal(subscript)
 	}
 ]]></Implementation>
@@ -77,30 +47,11 @@ Person class for ObjectScript FirstLook<br>]]></Description>
 <Required>1</Required>
 </Property>
 
-<Method name="Main">
+<Method name="WriteName">
 <Description><![CDATA[
-Create and store an instance of a person and print name
-You can type these commands in Terminal or call with:<br>
-do ##class(FirstLook.Person).Main()]]></Description>
-<ClassMethod>1</ClassMethod>
-<Implementation><![CDATA[
-	// Instantiate a new person object
-	set person = ##class(FirstLook.Person).%New()
-	// Set the FirstName and LastName properties
-	set person.FirstName = "Sarah"
-	set person.LastName = "Aarons"
-	// Save the new person
-	set status = person.%Save()
-	// If status = 1, save is successful
-	if (status = 1) do person.PrintName()
-]]></Implementation>
-</Method>
-
-<Method name="PrintName">
-<Description><![CDATA[
-Given an instance of a person, print person's name<br>
+Given an instance of a person, write person's name<br>
 To call from Terminal:<br>
-do person.PrintName()]]></Description>
+do person.WriteName()]]></Description>
 <Implementation><![CDATA[
 	write "The name of this person is:"
 	write !, ..FirstName
@@ -111,7 +62,7 @@ do person.PrintName()]]></Description>
 <Query name="Select">
 <Description><![CDATA[
 Query for all stored names<br>
-Called from ClassMethod PrintAllNames()<br>
+Called from ClassMethod WriteAllNames()<br>
 To call from Terminal:<br>
 do ##class(%ResultSet).RunQuery("FirstLook.Person", "Select")]]></Description>
 <Type>%SQLQuery</Type>
@@ -121,24 +72,25 @@ do ##class(%ResultSet).RunQuery("FirstLook.Person", "Select")]]></Description>
 	ORDER By LastName, FirstName</SqlQuery>
 </Query>
 
-<Method name="PrintAllNames">
+<Method name="WriteAllNames">
 <Description><![CDATA[
-Run select query and print all names in result set<br>
+Run select query and write all names in result set<br>
 To call from Terminal:<br>
-do ##class(FirstLook.Person).PrintAllNames()]]></Description>
+do ##class(FirstLook.Person).WriteAllNames()]]></Description>
 <ClassMethod>1</ClassMethod>
 <Implementation><![CDATA[
 	// Create a new ResultSet object
 	set resultSet = ##class(%ResultSet).%New()
-	// Set the ClassName and QueryName properties
+	// Specify the class query to execute by setting 
+	// the ClassName and QueryName properties.  
 	set resultSet.ClassName = "FirstLook.Person"
 	set resultSet.QueryName = "Select"
 	// Execute the query
 	set status = resultSet.%Execute()
-	// If status = 1, query is successful
-	if (status = 1) {
+	// If status = $$$OK, query is successful
+	if (status = $$$OK) {
 		// Iterate over results
-		while (resultSet.%Next() '= 0) {
+		while (resultSet.%Next()) {
 			// Write person's first and last name
 			write !, resultSet.FirstName, " ", resultSet.LastName
 		}
