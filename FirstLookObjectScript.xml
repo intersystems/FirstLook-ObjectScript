@@ -20,7 +20,7 @@ do ##class(FirstLook.ObjectScript).Iterate()]]></Description>
 		// Get the next subscript
 		set subscript = $order(^testglobal(subscript))
 		// When we get to the end, quit the for loop
-		if (subscript = "") quit
+		quit:(subscript = "")
 		// Otherwise, write the subscript and the value
 		// stored at ^testglobal(subscript)
 		write !, "subscript=", subscript, ", value=", ^testglobal(subscript)
