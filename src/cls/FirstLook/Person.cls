@@ -32,21 +32,24 @@ Query Select() As %SQLQuery [ SqlProc ]
 /// do ##class(FirstLook.Person).WriteAllNames()
 ClassMethod WriteAllNames()
 {
-	// Create a new ResultSet object
-	set resultSet = ##class(%ResultSet).%New()
-	// Specify the class query to execute by setting 
-	// the ClassName and QueryName properties.  
-	set resultSet.ClassName = "FirstLook.Person"
-	set resultSet.QueryName = "Select"
+	// Create a new %SQL.Statement object
+	set stmt = ##class(%SQL.Statement).%New()
+	// Prepare the class query to execute by passing in 
+	// the ClassName and QueryName.  
+	set status = stmt.%PrepareClassQuery("FirstLook.Person", "Select")
+
+	// Handle any errors	
+	if $$$ISERR(status) { 
+		do $system.OBJ.DisplayError(status)
+		quit  
+	}
+    
 	// Execute the query
-	set status = resultSet.%Execute()
-	// If status = $$$OK, query is successful
-	if (status = $$$OK) {
-		// Iterate over results
-		while (resultSet.%Next()) {
-			// Write person's first and last name
-			write !, resultSet.FirstName, " ", resultSet.LastName
-		}
+	set resultSet = stmt.%Execute()
+	// Iterate over results
+	while (resultSet.%Next()) {
+		// Write person's first and last name
+		write !, resultSet.%Get("FirstName"), " ", resultSet.%Get("LastName")
 	}
 }
 

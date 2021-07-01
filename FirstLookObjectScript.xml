@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Export generator="IRIS" version="26" zv="IRIS for Windows (x86-64) 2018.2 (Build 471U)" ts="2019-06-14 15:22:20">
+<Export generator="IRIS" version="26" zv="IRIS for Windows (x86-64) 2020.1 (Build 215U)" ts="2021-06-30 10:36:08">
 <Class name="FirstLook.ObjectScript">
 <Description>
 ObjectScript First Look</Description>
@@ -34,7 +34,7 @@ do ##class(FirstLook.ObjectScript).Iterate()]]></Description>
 <Description><![CDATA[
 Person class for ObjectScript FirstLook<br>]]></Description>
 <Super>%Persistent</Super>
-<TimeChanged>65178,46003.286581</TimeChanged>
+<TimeChanged>65925,38158.350022</TimeChanged>
 <TimeCreated>65127,42843.235733</TimeCreated>
 
 <Property name="FirstName">
@@ -79,21 +79,24 @@ To call from Terminal:<br>
 do ##class(FirstLook.Person).WriteAllNames()]]></Description>
 <ClassMethod>1</ClassMethod>
 <Implementation><![CDATA[
-	// Create a new ResultSet object
-	set resultSet = ##class(%ResultSet).%New()
-	// Specify the class query to execute by setting 
-	// the ClassName and QueryName properties.  
-	set resultSet.ClassName = "FirstLook.Person"
-	set resultSet.QueryName = "Select"
+	// Create a new %SQL.Statement object
+	set stmt = ##class(%SQL.Statement).%New()
+	// Prepare the class query to execute by passing in 
+	// the ClassName and QueryName.  
+	set status = stmt.%PrepareClassQuery("FirstLook.Person", "Select")
+
+	// Handle any errors	
+	if $$$ISERR(status) { 
+		do $system.OBJ.DisplayError(status)
+		quit  
+	}
+    
 	// Execute the query
-	set status = resultSet.%Execute()
-	// If status = $$$OK, query is successful
-	if (status = $$$OK) {
-		// Iterate over results
-		while (resultSet.%Next()) {
-			// Write person's first and last name
-			write !, resultSet.FirstName, " ", resultSet.LastName
-		}
+	set resultSet = stmt.%Execute()
+	// Iterate over results
+	while (resultSet.%Next()) {
+		// Write person's first and last name
+		write !, resultSet.%Get("FirstName"), " ", resultSet.%Get("LastName")
 	}
 ]]></Implementation>
 </Method>
