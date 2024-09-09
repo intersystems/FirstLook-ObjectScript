@@ -1,5 +1,5 @@
 # FirstLook-ObjectScript
-This repository provides the sample classes that you will need to work through the demo in <a href="http://docs.intersystems.com/irislatest/csp/docbook/DocBook.UI.Page.cls?KEY=AFL_objectscript">First Look: ObjectScript</a>.
+This repository provides the sample classes that you will need to work through the demo in <a href="https://learning.intersystems.com/course/view.php?name=PracticeObjectScript">Storing and Retrieving Data with InterSystems ObjectScript</a>.
 
 Files in this sample include:
 
